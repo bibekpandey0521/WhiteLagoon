@@ -15,6 +15,6 @@ namespace WhiteLagoon.Application.common.interfaces
         //void Add(Villa entity);
         void Update(Villa entity);
         //void Remove(Villa entity);
-        void Save();
+        //void Save();
     }
 }
