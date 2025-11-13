@@ -9,10 +9,12 @@ namespace WhiteLagoon.Web.Controllers
     public class VillaController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         
-        public VillaController(IUnitOfWork unitOfWork)
+        public VillaController(IUnitOfWork unitOfWork,IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -34,13 +36,25 @@ namespace WhiteLagoon.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                //_db.villas.Add(obj);
-                //_db.SaveChanges();
-                //TempData["success"] = "The villa has been created successfully";
-                //return RedirectToAction(nameof(Index));
-                //_villaRepo.Add(obj);
-                //_villaRepo.Save();
-                _unitOfWork.Villa.Add(obj);
+
+                if (obj.Image != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(obj.Image.FileName);
+                    string imagePath = Path.Combine(_webHostEnvironment.WebRootPath,@"images\VillaImage");
+
+                    using var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create);
+                    
+                    obj.Image.CopyTo(fileStream);
+
+                    obj.ImageUrl = @"\images\VillaImage\" + fileName;
+                    
+
+                }
+                else
+                {
+                    obj.ImageUrl = "https://placehold.co/600x400";
+                }
+                    _unitOfWork.Villa.Add(obj);
                 _unitOfWork.Save();
 
                 TempData["success"] = "The villa has been created successfully";
@@ -74,10 +88,37 @@ namespace WhiteLagoon.Web.Controllers
 
             if (ModelState.IsValid && obj.Id>0)
             {
+                if (obj.ImageUrl != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(obj.Image.FileName);
+                    string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, @"images\VillaImage");
+
+                    if (!string.IsNullOrEmpty(obj.ImageUrl))
+                    {
+                        var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, obj.ImageUrl.TrimStart('\\'));
+
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+                    using var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create);
+                    obj.Image.CopyTo(fileStream);
+
+                    obj.ImageUrl = @"\images\VillaImage\" + fileName;
+                }
+                //else
+                //{
+                //    obj.ImageUrl = @"\images\VillaImage\" + fileName;
+                //}
+
+
                 //    _db.villas.Update(obj);
                 //    _db.SaveChanges();
                 //_villaRepo.Update(obj);
                 // _villaRepo.Save();
+
+
                 _unitOfWork.Villa.Update(obj);
                 _unitOfWork.Save();
 
@@ -116,6 +157,15 @@ namespace WhiteLagoon.Web.Controllers
                 //_db.SaveChanges();
                 //_villaRepo.Remove(objFromDb);
                 //_villaRepo.Save();
+                if (!string.IsNullOrEmpty(objFromDb.ImageUrl))
+                {
+                    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, objFromDb.ImageUrl.TrimStart('\\'));
+
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
                 _unitOfWork.Villa.Remove(objFromDb);
                 _unitOfWork.Save();
                 TempData["success"] = "The villa has been deleted successfully";
