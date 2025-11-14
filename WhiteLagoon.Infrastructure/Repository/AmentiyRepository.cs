@@ -11,10 +11,10 @@ using WhiteLagoon.Infrastructure.Data;
 
 namespace WhiteLagoon.Infrastructure.Repository
 {
-    public class VillaNumberRepository : Repository<VillaNumber>, IVillaNumberRepository
+    public class AmentiyRepository : Repository<Amenity>, IAmenityRepository
     {
         private readonly ApplicationDbContext _db;
-        public VillaNumberRepository(ApplicationDbContext db) : base(db) 
+        public AmentiyRepository(ApplicationDbContext db) : base(db) 
         {
             _db = db;
 
@@ -73,9 +73,9 @@ namespace WhiteLagoon.Infrastructure.Repository
         //    _db.SaveChanges();
         //}
 
-        public void Update(VillaNumber entity)
+        public void Update(Amenity entity)
         {
-            _db.VillaNumbers.Update(entity);
+            _db.Amenties.Update(entity);
         }
     }
 }
