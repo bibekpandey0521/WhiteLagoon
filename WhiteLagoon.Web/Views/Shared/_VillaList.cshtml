@@ -63,21 +63,27 @@
                                         <p class="card-text" style="font-size:large">
                                            @Html.Raw(villa.Description)
                                         </p>
-                                        <p class="h5 text-white">Villa Amenities</p>
-                                        <ul>
-                                            <li>Amenity 1</li>
-                                            <li>Amenity 2</li>
-                                        </ul>
+                                        @if(villa.VillaAmenity!=null && villa.VillaAmenity.Count() > 0)
+                                        {
+                                            <p class="h5 text-white">Villa Amenities</p>
+                                            <ul>
+                                                @foreach(var amenity in villa.VillaAmenity)
+                                                {
+                                                    <li>@amenity.Name</li>
+                                                    
+                                                }
+                                            </ul>
+                                        }
                                     </div>
                                 </div>
                                 <div class="row col-12">
                                     <span class="text-end p-0 pt-3 m-0">
-                                        <span class="float-right">Max Occupancy: 11 adults</span><br />
-                                        <span class="float-right">Max Occupancy: 11 adults</span><br />
+                                        <span class="float-right">Max Occupancy: @villa.Occupancy adults</span><br />
+                                        <span class="float-right">Villa Size : @villa.Sqft  sqft</span><br />
                                         <p class="text-warning font-weight-bold pt-1">
                                             USD
                                             <span style="#ff6a00">
-                                                $11/night
+                                                @villa.Price.ToString("c") / night
                                             </span>
                                         </p>
                                     </span>
