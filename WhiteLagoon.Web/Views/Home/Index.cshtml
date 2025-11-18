@@ -1,8 +1,68 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model HomeVM
+<div>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
+        </div>
+
+        <!-- Carousel inner -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/images/slide2.jpg" class="d-block w-100" alt="..." />
+            </div>
+            <div class="carousel-item">
+                <img src="~/images/slide1.jpg" class="d-block w-100" alt="..." />
+            </div>
+        </div>
+
+        <!-- Previous button -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+
+        <!-- Next button -->
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <!-- Check-in Form -->
+    <form method="post" style="background-color:black">
+        <div class="row p-0 mx-0 py-4">
+
+            <div class="col-12 col-md-5 offset-md-1">
+                <div class="form-group">
+                    <label class="text-white">Check In Date</label>
+                    <input asp-for="CheckInDate" type="date" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-8 col-md-3">
+                <div class="form-group">
+                    <label class="text-white">No. of Nights</label>
+                    <select class="form-select">
+                        @for (var i = 1; i < 11; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-4 col-md-2">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-block mt-4">
+                        <i class="bi bi-search"></i> &nbsp; Check Availability
+                    </button>
+                </div>
+            </div>
+        </div>
+        <partial name="_VillaList" model="Model" />
+    </form>
 </div>
+
