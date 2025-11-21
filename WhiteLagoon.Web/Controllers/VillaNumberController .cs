@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
@@ -9,6 +10,7 @@ using WhiteLagoon.Web.ViewModels;
 
 namespace WhiteLagoon.Web.Controllers
 {
+    [Authorize]
     public class VillaNumberController : Controller
     {
         private readonly ApplicationDbContext _db;

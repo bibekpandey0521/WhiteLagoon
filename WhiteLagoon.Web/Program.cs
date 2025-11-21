@@ -13,10 +13,24 @@ builder.Services.AddDbContext <ApplicationDbContext>(option =>
    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 //builder.Services.AddScoped<IVillaRepository,VillaRepository>();
-builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.ConfigureApplicationCookie(option =>
+{
+    option.AccessDeniedPath = "/Account/AccessDenied";
+    option.LoginPath = "/Account/Login";
+
+});
+
+builder.Services.Configure<IdentityOptions>(option =>
+{
+    option.Password.RequiredLength = 6;
+
+});
+
+builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,6 +44,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

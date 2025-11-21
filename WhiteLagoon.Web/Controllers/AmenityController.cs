@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WhiteLagoon.Application.common.interfaces;
+using WhiteLagoon.Application.common.Utility;
 using WhiteLagoon.Domain.Entities;
 using WhiteLagoon.Web.ViewModels;
 
 namespace WhiteLagoon.Web.Controllers
 {
+    [Authorize(Roles = SD.Role_Admin )]
     public class AmenityController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
