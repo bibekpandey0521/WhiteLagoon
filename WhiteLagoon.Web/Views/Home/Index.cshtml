@@ -32,7 +32,11 @@
         </button>
     </div>
     <!-- Check-in Form -->
-    <form method="post" style="background-color:black">
+    @* <form method="post" style="background-color:black"
+        asp-action="GetVillasByDate" data-ajax-method="post"
+        data-ajax="true" data-ajax-mode="replace" data-ajax-update="#VillasList"> *@
+    <form method="post" style="background-color:black"
+        asp-action="GetVillasByDate">
         <div class="row p-0 mx-0 py-4">
 
             <div class="col-12 col-md-5 offset-md-1">
@@ -45,7 +49,7 @@
             <div class="col-8 col-md-3">
                 <div class="form-group">
                     <label class="text-white">No. of Nights</label>
-                    <select class="form-select">
+                    <select class="form-select" asp-for="Nights">
                         @for (var i = 1; i < 11; i++)
                         {
                             <option value="@i">@i</option>
@@ -56,7 +60,7 @@
 
             <div class="col-4 col-md-2">
                 <div class="form-group">
-                    <button type="submit" class="btn btn-success btn-block mt-4">
+                    <button type="button" onclick="fnLoadVillaList()" class="btn btn-success btn-block mt-4">
                         <i class="bi bi-search"></i> &nbsp; Check Availability
                     </button>
                 </div>
@@ -65,4 +69,34 @@
         <partial name="_VillaList" model="Model" />
     </form>
 </div>
+
+@section scripts{
+
+    <script>
+        function fnLoadVillaList(){
+           $('.spinner').show();
+            var objData = {
+                checkInDate: $("#CheckInDate").val(),
+                nights : $("Nights").val()
+            };
+        $.ajax({
+                url:"@Url.Action("GetVillasByDate","Home")",
+                data:objData,
+                type:"POST",
+                success:function (data){
+                    $("#VillaList").empty();
+                    $("#VillaList").html(data);
+                    $('.spinner').hide();
+                },
+                failure: function (response){
+                    $('.spinner').hide();
+                    alert(response.responseText);
+                },
+                error:function (response){
+                    $('.spinner').hide();
+                    alert(response.responseText);                }
+            });
+        }
+    </script>
+}
 
