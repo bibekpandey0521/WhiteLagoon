@@ -77,7 +77,7 @@
            $('.spinner').show();
             var objData = {
                 checkInDate: $("#CheckInDate").val(),
-                nights : $("Nights").val()
+                nights : $("#Nights").val()
             };
         $.ajax({
                 url:"@Url.Action("GetVillasByDate","Home")",

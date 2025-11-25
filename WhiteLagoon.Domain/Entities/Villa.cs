@@ -33,6 +33,6 @@ namespace WhiteLagoon.Domain.Entities
         public IEnumerable<Amenity> VillaAmenity { get; set; }
 
         [NotMapped]
-        public bool IsAvailable { get; set; }
+        public bool IsAvailable { get; set; } = true;
     }
 }
