@@ -28,6 +28,7 @@ namespace WhiteLagoon.Infrastructure.Repository
             Villa = new VillaRepository(_db);
             Amenity = new AmentiyRepository(_db);
             VillaNumber = new VillaNumberRepository(_db);
+            Booking = new BookingRepository(_db);
             User = new ApplicationUserRepository(_db);
 
         }
