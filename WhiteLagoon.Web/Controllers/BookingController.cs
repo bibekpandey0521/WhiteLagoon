@@ -17,6 +17,12 @@ namespace WhiteLagoon.Web.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         // ============================================================
         // FINALIZE BOOKING (GET)
         // ============================================================
@@ -131,5 +137,51 @@ namespace WhiteLagoon.Web.Controllers
 
             return View(bookingId);
         }
+
+        //regions API Call
+        [HttpGet]
+        [Authorize]
+        //public IActionResult GetAll()
+        //{
+        //    IEnumerable<Booking> objBookings;
+
+        //    if (User.IsInRole(SD.Role_Admin))
+        //    {
+        //        objBookings = _unitOfWork.Booking.GetAll(includeProperties:"User,Villa");
+        //    }
+        //    else
+        //    {
+        //        var claimsIdentity = (ClaimsIdentity)User.Identity;
+        //        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+        //        objBookings = _unitOfWork.Booking
+        //            .GetAll(u => u.UserId == userId,includeProperties:"User,Villa");
+        //    }
+        //    objBookings = _unitOfWork.Booking.GetAll(includeProperties: "User,Villa");
+        //    return Json(new { data = objBookings});
+        //}
+        [HttpGet]
+        //[Authorize]
+        public IActionResult GetAll()
+        {
+            IEnumerable<Booking> objBookings;
+
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                objBookings = _unitOfWork.Booking
+                    .GetAll(includeProperties: "User,Villa");
+            }
+            else
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                objBookings = _unitOfWork.Booking
+                    .GetAll(u => u.UserId == userId, includeProperties: "User,Villa");
+            }
+            //objBookings = _unitOfWork.Booking
+            //       .GetAll(includeProperties: "User,Villa");
+            return Json(new { data = objBookings });
+        }
+
     }
 }
