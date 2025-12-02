@@ -30,9 +30,9 @@ namespace WhiteLagoon.Web.Controllers
         public IActionResult FinalizeBooking(int villaId, DateOnly checkInDate, int nights)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity!;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            ApplicationUser user = _unitOfWork.User.Get(u => u.Id == userId)!;
+            ApplicationUser user = _unitOfWork.User.Get(u => u.Id == userId);
 
             Booking booking = new()
             {
@@ -42,8 +42,8 @@ namespace WhiteLagoon.Web.Controllers
                 Nights = nights,
                 CheckOutDate = checkInDate.AddDays(nights),
                 UserId = userId,
-                Phone = user.PhoneNumber,
-                Email = user.Email,
+                Phone = user.PhoneNumber!,
+                Email = user.Email!,
                 Name = user.Name,
             };
 
@@ -59,8 +59,7 @@ namespace WhiteLagoon.Web.Controllers
         [HttpPost]
         public IActionResult FinalizeBooking(Booking booking)
         {
-            var villa = _unitOfWork.Villa.Get(u => u.Id == booking.VillaId)
-                       ?? throw new Exception("Villa not found.");
+            var villa = _unitOfWork.Villa.Get(u => u.Id == booking.VillaId);
 
             booking.TotalCost = villa.Price * booking.Nights;
             booking.Status = SD.StatusPending;
@@ -123,9 +122,11 @@ namespace WhiteLagoon.Web.Controllers
                 // Fetch Stripe session
                 var service = new Stripe.Checkout.SessionService();
                 Session session = service.Get(bookingFromDb.StripeSessionId);
+                string? paymentIntentId = session.PaymentIntentId
+                              ?? session.PaymentIntent?.Id;
 
                 // CORRECT STRIPE CHECK
-                if (session.Status == "complete" && session.PaymentStatus == "paid")
+                if (session.PaymentStatus == "paid")
                 {
                     _unitOfWork.Booking.UpdateStatus(bookingFromDb.Id, SD.StatusApproved);
                     _unitOfWork.Booking.UpdateStripePaymentID(
@@ -160,8 +161,8 @@ namespace WhiteLagoon.Web.Controllers
         //    return Json(new { data = objBookings});
         //}
         [HttpGet]
-        //[Authorize]
-        public IActionResult GetAll()
+        [Authorize]
+        public IActionResult GetAll(string status)
         {
             IEnumerable<Booking> objBookings;
 
@@ -180,6 +181,10 @@ namespace WhiteLagoon.Web.Controllers
             }
             //objBookings = _unitOfWork.Booking
             //       .GetAll(includeProperties: "User,Villa");
+            if (!string.IsNullOrEmpty(status))
+            {
+                objBookings = objBookings.Where(u => u.Status.ToLower().Equals(status.ToLower()));
+            }
             return Json(new { data = objBookings });
         }
 

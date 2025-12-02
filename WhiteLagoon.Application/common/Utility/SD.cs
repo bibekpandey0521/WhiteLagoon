@@ -15,7 +15,7 @@ namespace WhiteLagoon.Application.common.Utility
         public const string StatusApproved  = "Approved";
         public const string StatusCheckedIn = "CheckedIn";
         public const string StatusCompleted = "Completed";
-        public const string StatusCancelled = "Refunded";
+        public const string StatusCancelled = "Cancelled";
 
 
     }

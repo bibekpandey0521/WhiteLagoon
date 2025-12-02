@@ -82,7 +82,7 @@ namespace WhiteLagoon.Infrastructure.Repository
         public void UpdateStatus(int bookingId, string bookingStatus)
         {
             var bookingFromDb = _db.Bookings.FirstOrDefault(m => m.Id == bookingId);
-            if (bookingFromDb == null) 
+            if (bookingFromDb !=null) 
             {
                 bookingFromDb.Status = bookingStatus;
                 if(bookingStatus == SD.StatusCheckedIn)
@@ -98,15 +98,14 @@ namespace WhiteLagoon.Infrastructure.Repository
 
         public void UpdateStripePaymentID(int bookingId, string sessionId, string paymentIntentId)
         {
-
             var bookingFromDb = _db.Bookings.FirstOrDefault(m => m.Id == bookingId);
-            if (bookingFromDb != null)
+            if (bookingFromDb != null) 
             {
-                if(!string.IsNullOrEmpty(sessionId))
+                if (!string.IsNullOrEmpty(sessionId))
                 {
                     bookingFromDb.StripeSessionId = sessionId;
                 }
-                if (!string.IsNullOrEmpty(paymentIntentId))
+                if (!string.IsNullOrEmpty(paymentIntentId)) 
                 {
                     bookingFromDb.StripePaymentIntentId = paymentIntentId;
                     bookingFromDb.PaymentDate = DateTime.Now;
